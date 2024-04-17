@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe SlotMachineService, type: :service do
   let(:user) { User.new(credits: 10) }
-  let(:service) { described_class.new(user) }
+  let(:service) { described_class.new(user.credits) }
 
   describe '#roll' do
     it 'returns an array of symbols' do

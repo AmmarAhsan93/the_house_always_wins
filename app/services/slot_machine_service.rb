@@ -7,11 +7,9 @@ class SlotMachineService
     'O' => 30,
     'W' => 40
   }.freeze
-
-  attr_reader :user
-
-  def initialize(user)
-    @user = user
+  
+  def initialize(credits)
+    @credits = credits
   end
 
   def roll
@@ -22,6 +20,8 @@ class SlotMachineService
     [result, calculate_credits(result)]
   end
 
+  private_constant :SYMBOLS
+
   private
 
   def winning_roll?(result)
@@ -29,19 +29,15 @@ class SlotMachineService
   end
 
   def calculate_credits(result)
-    if winning_roll?(result)
-      SYMBOLS[result.first]
-    else
-      -1
-    end
+    return -1 unless winning_roll?(result)
+
+    SYMBOLS[result.first]
   end
 
   def should_reroll?
-    credits = user.credits
-
-    return false if credits < 40
-    return true if credits > 60 && rand(1..100) <= 60
-    return true if credits.between?(40, 60) && rand(1..100) <= 30
+    return false if @credits < 40
+    return true if @credits > 60 && rand(1..100) <= 60
+    return true if @credits.between?(40, 60) && rand(1..100) <= 30
 
     false
   end

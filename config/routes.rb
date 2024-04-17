@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  resources :users, only: [:new, :create]
+  resources :dashboard, only: [:index]
+  resource :game, only: [] do
+    member do
+      post :roll, to: 'game#roll'
+      post :cash_out, to: 'game#cash_out'
+    end
+  end
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  root to: 'users#new'
 end

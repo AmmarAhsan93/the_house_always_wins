@@ -1,7 +1,11 @@
+body {
+  text-align: center;
+}
+
 #slot-machine {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin: 20px 0px;
 }
 
 .slot {
@@ -19,7 +23,13 @@
   display: inline-block;
 }
 
+.unclickable {
+  pointer-events: none;
+  opacity:0.6;
+}
+
 #spin-button {
+  width: 170px;
   padding: 10px 20px;
   font-size: 16px;
   background-color: #4CAF50;
@@ -39,6 +49,7 @@
 }
 
 #cash-out-button {
+  width: 170px;
   padding: 10px 20px;
   font-size: 16px;
   background-color: #D70040;

@@ -6,7 +6,8 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(name: user_params[:username], credits: 10)
+    @user = User.find_or_initialize_by(name: user_params[:username])
+    @user.credits ||= User::DEFAULT_CREDITS
 
     if @user.save
       session[:user_id] = @user.id
