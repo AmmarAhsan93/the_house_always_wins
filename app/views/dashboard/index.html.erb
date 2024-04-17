@@ -1,0 +1,58 @@
+<h1>Slot Machine</h1>
+<div>
+<h3 id="credits">Credits: <%= session[:user_credits] %></h3>
+</div>
+<div id="slot-machine">
+  <div class="slot" id="slot1"></div>
+  <div class="slot" id="slot2"></div>
+  <div class="slot" id="slot3"></div>
+</div>
+<button id="spin-button" onclick="startSpinning()">Spin</button>
+<%= button_to "Cash Out", cash_out_game_path, method: :post, id: "cash-out-button" %>
+
+<script>
+function startSpinning() {
+  const symbols = ['C', 'L', 'O', 'W'];
+
+  // Get the slot elements
+  const slot1 = document.getElementById('slot1');
+  const slot2 = document.getElementById('slot2');
+  const slot3 = document.getElementById('slot3');
+
+  // Generate random symbols
+  const symbol1 = symbols[Math.floor(Math.random() * symbols.length)];
+  const symbol2 = symbols[Math.floor(Math.random() * symbols.length)];
+  const symbol3 = symbols[Math.floor(Math.random() * symbols.length)];
+
+  // Spin the slots
+  slot1.textContent = 'X';
+  slot2.textContent = 'X';
+  slot3.textContent = 'X';
+
+  const token = document.querySelector("meta[name='csrf-token']").content;
+
+  // Fetch results from backend API
+  fetch("/game/roll", { method: "POST" , headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": token,
+      }})
+    .then((response) => response.json())
+    .then((data) => {
+      // Stop spinning and display the final symbols
+      setTimeout(() => {
+        slot1.textContent = data["result"][0];
+      }, 1000);
+
+      setTimeout(() => {
+        slot2.textContent = data["result"][1];
+      }, 2000);
+
+      setTimeout(() => {
+        slot3.textContent = data["result"][2];
+        document.querySelector("#credits").textContent = `Credits: ${data["credits"]}`
+      }, 3000);
+
+    });
+}
+
+</script>
