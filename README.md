@@ -1,53 +1,79 @@
-### Objective
+## The House Always Wins
 
-Jackpot! You've landed a summer gig in Las Vegas! Unfortunately, it's 2020, and the casinos are closed due to COVID-19. Your boss wants to move some of the business online and asks you to build a full-stack app — a simple slot machine game, with a little twist. Build it to ensure that the house always wins!
+## Description
 
-### Brief
+The Game App is a web application where users can play Slot Machine and earn credits.
 
-When a player starts a game/session, they are allocated 10 credits.
-Pulling the machine lever (rolling the slots) costs 1 credit.
-The game screen has 1 row with 3 blocks.
-For players to win the roll, they have to get the same symbol in each block.
-There are 4 possible symbols: cherry (10 credits reward), lemon (20 credits reward), orange (30 credits reward), and watermelon (40 credits reward).
-The game (session) state has to be kept on the server.
-If the player keeps winning, they can play forever, but the house has something to say about that...
-There is a CASH OUT button on the screen, but there's a twist there as well.
+### Dashboard Controller
 
-### Tasks
-- Implement the assignment using any language or framework you feel comfortable with
-- When a user opens the app, a session is created on the server, and they have 10 starting credits.
+The Dashboard controller handles user input for the unique username. Currently, authentication is not implemented, so only the username is used to identify the user. Upon entering a username, the user is awarded 10 credits, and the username is stored in the session.
 
-**Server-side:**
-- When a user has less than 40 credits in the game session, their rolls are truly random.
-- If a user has between 40 and 60 credits, then the server begins to slightly cheat:
-  - For each winning roll, before communicating back to the client, the server does one 30% chance roll which decides if the server will re-roll that round.
-    - If that roll is true, then the server re-rolls and communicates the new result back.
-  - If the user has above 60 credits, the server acts the same, but in this case the chance of re-rolling the round increases to 60%.
-    - If that roll is true, then the server re-rolls and communicates the new result back.
-- There is a cash-out endpoint that moves credits from the game session to the user's account and closes the session.
+### User Controller
 
-**Client side:**
-- Include a super simple, minimalistic table with 3 blocks in 1 row.
-- Include a button next to the table that starts the game.
-- The components for each sign can be a starting letter (C for cherry, L for lemon, O for orange, W for watermelon).
-- After submitting a roll request to the server, all blocks should enter a spinning state (can be 'X' character spinning) or you can get fancy-pants with CSS if you like.
-  - After receiving a response from the server, the first sign should spin for 1 second more and then display the result, then display the second sign at 2 seconds, then the third sign at 3 seconds.
-  - If the user wins the round, their session credit is increased by the amount from the server response, else it is deducted by 1.
-  - Include a button on the screen that says "CASH OUT".  When they hit it, credits from the session are moved to their account.
--   Write tests for your business logic.
+The User controller is responsible for creating a session with the username and initializing the credit score for the user. It handles the logic related to user sessions and manages the user's credit score.
 
-### Evaluation Criteria
+### Game Controller
 
-We are looking for high-quality, shippable code.  Note that we want you to cap your hours to a maximum of 3.  Making tradeoffs will be important, and we would like you to call out the tradeoffs you have made, and what you would have done if you had more time.
+The Game controller contains two actions: spin and cash out.
 
-- Maintainability: Your code is written in a way that's easy to understand by other engineers.
-- Testing: Critical paths are well-tested and the tests are easy to understand.
-- Documentation: Your solution is well-documented.
+- The "spin" action triggers the spinning animation by setting the three boxes as 'X'. It sends a request to the backend to generate a randomized output.
+- The "cash out" action stores the current credits of the user in the database.
 
-### CodeSubmit
+### Stimulus Controller
 
-Please organize, design, test, and document your code as if it were going into production - then push your changes to the master branch. After you have pushed your code, you may submit the assignment on the assignment page.
+The Stimulus controller named "Game" is responsible for handling the frontend interactions. It sends a request to the backend to retrieve the game results. Before receiving the response, it sets the three boxes as 'X', indicating that the spinning animation is in progress. Once the response is received, the results are displayed in each individual box, with a gap of 1 second between each box.
 
-All the best and happy coding,
+## Installation
 
-The UserEvidence Team
+To run the Game App locally, follow these steps:
+
+1. Clone the repository:
+
+   ```shell
+   git clone http://userevidence-wkvatv@git.codesubmit.io/userevidence/the-house-always-wins-ggfomw
+   ```
+
+2. Install dependencies:
+
+   ```shell
+   cd game-app
+   bundle install
+   ```
+
+3. Set up the database:
+
+   ```shell
+   rails db:create
+   rails db:migrate
+   ```
+
+4. Start the Rails server:
+
+   ```shell
+   rails server
+   ```
+
+5. Access the application in your browser at `http://localhost:3000`.
+
+## Running Specs
+- bundle exec rspec
+
+## Dependencies
+
+The Game App has the following dependencies:
+
+- Ruby (version 3.1.3)
+- Ruby on Rails (version 7.0.6)
+- Hotwire Stimulus (version 1.2.1)
+
+## Trade Offs / improvements
+
+1. Currently, the App does not implement authentication. Instead, it relies on the unique username provided by the user to identify each individual user. Even if the session is destroyed, users can retrieve their scores by using the same username again. Instead of doing this way we can use devise for authentication and store the credits of all users along with their other information.
+
+2. As an alternative to using letter symbols, the App has the capability to incorporate visual images to represent various symbols, such as cherries, lemons, and other relevant icons. This enhancement can enhance the user interface and provide a more engaging and visually appealing experience for players.
+
+3. At present, the App does not persist data for each spin. However, it is essential to note that in a production-ready deployment, it is recommended to implement data storage to ensure the preservation of spin records and provide a complete user experience.
+
+4. Instead of displaying the letter "X" to indicate the spinning effect, the App can be enhanced to incorporate an actual spinning animation. This visual effect will add an immersive and dynamic element to the user interface, providing a more captivating and realistic spinning experience.
+
+5. We can Implement role-based authorization. By implementing roles, such as an admin role, we can introduce additional capabilities and permissions. Admin users would have the privilege to perform various exciting tasks, including modifying symbols, adding new symbols, or adjusting winning credit scores. This feature enables greater flexibility and customization within the application, catering to different user roles and enhancing the overall user experience.
